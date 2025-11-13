@@ -1,6 +1,6 @@
 "use client";
 
-import Navbar from "./components/Navbar";
+import Navbar from "../components/Navbar";
 import "./globals.css";
 import { HeroUIProvider } from "@heroui/react";
 
