@@ -11,7 +11,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <body className="bg-gray-950 text-gray-100">
         <HeroUIProvider>
           <Navbar />
-          <main className="max-w-7xl mx-auto p-6 pt-20">{children}</main>
+          <main className="max-w-7xl mx-auto p-6 mt-20">{children}</main>
         </HeroUIProvider>
       </body>
     </html>
