@@ -1,4 +1,3 @@
-import ProductCard from "./components/ProductCard";
 import ProductsPage from "./products/page";
 
 
