@@ -9,6 +9,12 @@ const productSchema = new Schema(
       maxlength: [100, "El nombre no puede superar 100 caracteres"],
       trim: true,
     },
+    description: {
+      type: String,
+      required: true,
+      minlength: 10,
+      maxlength: 500,
+    },
     price: {
       type: Number,
       required: [true, "El precio es obligatorio"],
@@ -31,10 +37,9 @@ const productSchema = new Schema(
     },
   },
   {
-    timestamps: true, 
+    timestamps: true,
   }
 );
-
 
 const Product = models.Product || model("Product", productSchema);
 

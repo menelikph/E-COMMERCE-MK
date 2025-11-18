@@ -22,7 +22,7 @@ export async function POST(request: Request) {
   try {
     await connectDB();
     const data = await request.json();
-    const { name, price, quantity, reference, imageUrl } = data;
+    const { name, price, quantity, reference, imageUrl, description } = data;
 
     if (!name || !price || !quantity || !reference || !imageUrl) {
       return NextResponse.json(
@@ -31,7 +31,7 @@ export async function POST(request: Request) {
       );
     }
 
-    const existingProduct = await Product.findOne({reference});
+    const existingProduct = await Product.findOne({ reference }); //check for existing product with same reference
     if (existingProduct) {
       return NextResponse.json(
         { message: "Ya existe un producto con esa referencia" },
@@ -45,9 +45,12 @@ export async function POST(request: Request) {
       quantity,
       reference,
       imageUrl,
+      description,
     });
 
-    return NextResponse.json(newProduct, {status: 201});
+    await newProduct.save(); //save the new product to the database
+
+    return NextResponse.json(newProduct, { status: 201 });
   } catch (error) {
     console.error("Error creating product:", error);
     return NextResponse.json(
