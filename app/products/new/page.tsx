@@ -5,6 +5,7 @@ import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 import { uploadImage } from "@/lib/cloudinary";
+import { useState } from "react";
 
 const schema = yup.object({
   name: yup.string().required("Name is required"),
@@ -34,6 +35,7 @@ const schema = yup.object({
 });
 
 export default function NewProductPage() {
+  // react-hook-form setup
   const {
     register,
     handleSubmit,
@@ -42,33 +44,50 @@ export default function NewProductPage() {
     resolver: yupResolver(schema),
   });
 
+  // state for image preview
+  const [preview, setPreview] = useState<string | null>(null);
+
+
   // function to handle form submission
   const onSubmit = async (data: any) => {
     try {
-      console.log("FORM RAW DATA:", data);
-
+      // image upload process
       const file = data.image[0];
+      if (!file) return alert("No image selected");
+
 
       const imageUrl = await uploadImage(file);
-      console.log("IMAGE URL:", imageUrl);
+
 
       const newProduct = {
         name: data.name,
-        price: Number(data.price),
-        quantity: Number(data.quantity),
-        reference: data.reference,
+        price: data.price,
         description: data.description,
-        imageUrl,
+        quantity: data.quantity,
+        reference: data.reference,
+        imageUrl,   // <-- URL CLOUDINARY
       };
 
-      console.log("PRODUCT READY:", newProduct);
 
-      alert("Product prepared! (still not saved)");
-    } catch (error) {
-      console.error("Error:", error);
-      alert("Something went wrong");
+      const res = await fetch("/api/products", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(newProduct),
+      });
+
+      if (!res.ok) {
+        const error = await res.json();
+        throw new Error(error.message);
+      }
+
+      alert("Product saved successfully!");
+    } catch (error: any) {
+      console.error(error);
+      alert(error.message || "Error saving product");
     }
   };
+
+
 
   return (
     <div className="max-w-3xl mx-auto px-6 py-10">
@@ -160,7 +179,20 @@ export default function NewProductPage() {
             type="file"
             {...register("image")}
             className="w-full px-4 py-2 rounded-lg bg-gray-900 border border-gray-700 text-white focus:border-purple-500 outline-none"
+            onChange={(e) => {
+              const file = e.target.files?.[0];
+              if (file) setPreview(URL.createObjectURL(file));
+            }}
           />
+          {preview && (
+            <div className="mt-4 flex justify-center">
+              <img
+                src={preview}
+                alt="Preview"
+                className="w-40 h-40 object-contain rounded-lg border border-gray-700"
+              />
+            </div>
+          )}
           {errors.image && (
             <p className="text-red-400 text-sm mt-1">
               {errors.image.message as string}
@@ -171,10 +203,18 @@ export default function NewProductPage() {
         <button
           type="submit"
           disabled={isSubmitting}
-          className="w-full bg-purple-600 hover:bg-purple-700 text-white py-2 rounded-lg transition disabled:opacity-50"
+          className="w-full bg-purple-600 hover:bg-purple-700 text-white py-2 rounded-lg transition disabled:opacity-50 flex justify-center items-center gap-2"
         >
-          {isSubmitting ? "Saving..." : "Save Product"}
+          {isSubmitting ? (
+            <>
+              <span className="animate-spin h-4 w-4 border-2 border-white border-t-transparent rounded-full"></span>
+              Saving...
+            </>
+          ) : (
+            "Save Product"
+          )}
         </button>
+
       </form>
     </div>
   );

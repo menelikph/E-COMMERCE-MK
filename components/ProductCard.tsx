@@ -15,7 +15,7 @@ export default function ProductCard({ name, price, imageUrl, index = 0 }: Produc
       animate={{ opacity: 1, y: 0 }}
       transition={{
         duration: 0.4,
-        delay: index * 0.1,   // <- ANIMACIÓN EN CASCADA
+        delay: index * 0.1,
         ease: "easeOut",
       }}
       className="group border border-gray-800 hover:border-purple-400 transition-all duration-300 rounded-2xl p-5 flex flex-col items-center text-center bg-gray-950 hover:shadow-[0_0_15px_rgba(168,85,247,0.2)]"
