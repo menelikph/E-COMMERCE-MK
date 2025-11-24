@@ -2,6 +2,7 @@
 import { motion, AnimatePresence } from "framer-motion";
 import { useEffect, useState } from "react";
 import Link from "next/link";
+import AuthButton from "./AuthButton";
 
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
@@ -110,12 +111,9 @@ export default function Navbar() {
         </ul>
 
         <div className="hidden md:block">
-          <Link
-            href="/login"
-            className="px-4 py-2 bg-purple-500 hover:bg-purple-600 text-white text-sm font-medium rounded-md transition"
-          >
-            Login
-          </Link>
+          <li className="flex justify-center ">
+            <AuthButton/>
+          </li>
         </div>
       </nav>
 
@@ -176,14 +174,8 @@ export default function Navbar() {
                     Contact
                   </Link>
                 </li>
-                <li>
-                  <Link
-                    href="/login"
-                    onClick={() => setIsOpen(false)}
-                    className="inline-block px-4 py-2 bg-purple-500 text-white rounded-md mt-2 hover:bg-purple-600 transition"
-                  >
-                    Login
-                  </Link>
+                <li className="w-full flex justify-center mt-4 ">
+                  <AuthButton isMobile />
                 </li>
               </ul>
             </motion.div>

@@ -6,6 +6,7 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 import { uploadImage } from "@/lib/cloudinary";
 import { useState } from "react";
+import { useSession, signIn } from "next-auth/react";
 
 const schema = yup.object({
   name: yup.string().required("Name is required"),
@@ -36,6 +37,8 @@ const schema = yup.object({
 
 export default function NewProductPage() {
   // react-hook-form setup
+  const { data: session, status } = useSession();
+
   const {
     register,
     handleSubmit,
@@ -47,7 +50,6 @@ export default function NewProductPage() {
   // state for image preview
   const [preview, setPreview] = useState<string | null>(null);
 
-
   // function to handle form submission
   const onSubmit = async (data: any) => {
     try {
@@ -55,9 +57,7 @@ export default function NewProductPage() {
       const file = data.image[0];
       if (!file) return alert("No image selected");
 
-
       const imageUrl = await uploadImage(file);
-
 
       const newProduct = {
         name: data.name,
@@ -65,9 +65,8 @@ export default function NewProductPage() {
         description: data.description,
         quantity: data.quantity,
         reference: data.reference,
-        imageUrl,   // <-- URL CLOUDINARY
+        imageUrl, // <-- URL CLOUDINARY
       };
-
 
       const res = await fetch("/api/products", {
         method: "POST",
@@ -87,7 +86,29 @@ export default function NewProductPage() {
     }
   };
 
+  if (status === "loading") {
+    return <p>Cargando...</p>;
+  }
 
+  if (!session) {
+    return (
+      <div className="text-center mt-20">
+        <h2 className="text-2xl font-bold text-red-400 mb-4">
+          Acceso restringido
+        </h2>
+        <p className="text-gray-300 mb-6">
+          Debes iniciar sesión para agregar un producto.
+        </p>
+
+        <button
+          onClick={() => signIn("google")}
+          className="px-6 py-2 bg-purple-600 hover:bg-purple-700 text-white rounded-md"
+        >
+          Login
+        </button>
+      </div>
+    );
+  }
 
   return (
     <div className="max-w-3xl mx-auto px-6 py-10">
@@ -214,7 +235,6 @@ export default function NewProductPage() {
             "Save Product"
           )}
         </button>
-
       </form>
     </div>
   );
