@@ -7,32 +7,53 @@ import * as yup from "yup";
 import { uploadImage } from "@/lib/cloudinary";
 import { useState } from "react";
 import { useSession, signIn } from "next-auth/react";
+import { notifySuccess, notifyError } from "@/utils/toast";
+
+
+
+const FILE_SIZE = 2 * 1024 * 1024; // 2MB
+const SUPPORTED_FORMATS = ["image/jpeg", "image/png", "image/webp"];
 
 const schema = yup.object({
-  name: yup.string().required("Name is required"),
+  name: yup
+    .string()
+    .required("Name is required")
+    .min(3, "Minimum 3 characters")
+    .max(100, "Maximum 100 characters"),
+
   price: yup
     .number()
     .typeError("Price must be a number")
     .positive("Price must be positive")
     .required("Price is required"),
+
   description: yup
     .string()
     .required("Description is required")
     .min(10, "Minimum 10 characters")
     .max(500, "Maximum 500 characters"),
+
   quantity: yup
     .number()
     .typeError("Quantity must be a number")
+    .integer("Quantity must be an integer")
     .min(0, "Quantity cannot be negative")
     .required("Quantity is required"),
-  reference: yup.string().required("Reference is required"),
+
+  reference: yup
+    .string()
+    .required("Reference is required")
+    .matches(/^[a-zA-Z0-9\-]+$/, "Only letters, numbers and hyphens allowed"),
+
   image: yup
     .mixed()
-    .test(
-      "required",
-      "Image is required",
-      (value: any) => value && value.length > 0
-    ),
+    .required("Image is required")
+    .test("fileSize", "Image is too large (max 2MB)", (value: any) => {
+      return value && value[0] && value[0].size <= FILE_SIZE;
+    })
+    .test("fileFormat", "Unsupported image format", (value: any) => {
+      return value && value[0] && SUPPORTED_FORMATS.includes(value[0].type);
+    }),
 });
 
 export default function NewProductPage() {
@@ -55,7 +76,7 @@ export default function NewProductPage() {
     try {
       // image upload process
       const file = data.image[0];
-      if (!file) return alert("No image selected");
+      if (!file) return notifyError("No image selected");
 
       const imageUrl = await uploadImage(file);
 
@@ -79,7 +100,7 @@ export default function NewProductPage() {
         throw new Error(error.message);
       }
 
-      alert("Product saved successfully!");
+      notifySuccess("Product saved successfully!");
     } catch (error: any) {
       console.error(error);
       alert(error.message || "Error saving product");

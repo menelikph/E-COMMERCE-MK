@@ -1,15 +1,17 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { connectDB } from "@/lib/mongodb";
 import Product from "@/models/Product";
 import { NextResponse } from "next/server";
 import { getServerSession } from "next-auth";
 import { authOptions } from "../auth/[...nextauth]/route";
 import { sendEmail } from "@/lib/nodemailer";
+import { productSchema } from "@/lib/validation/productSchema";
 
-//list all products
+// GET → List all products
 export async function GET() {
   try {
     await connectDB();
-    const products = await Product.find().sort({ createdAt: -1 }); //sort by newest first
+    const products = await Product.find().sort({ createdAt: -1 });
     return NextResponse.json(products, { status: 200 });
   } catch (error) {
     console.error("Error fetching products:", error);
@@ -20,7 +22,7 @@ export async function GET() {
   }
 }
 
-//POST a new product into the database
+// POST → Create new product
 export async function POST(request: Request) {
   try {
     await connectDB();
@@ -29,16 +31,20 @@ export async function POST(request: Request) {
     const userEmail = session?.user?.email;
 
     const data = await request.json();
-    const { name, price, quantity, reference, imageUrl, description } = data;
 
-    if (!name || !price || !quantity || !reference || !imageUrl) {
+    // Validación con Yup
+    try {
+      await productSchema.validate(data, { abortEarly: false });
+    } catch (err: any) {
       return NextResponse.json(
-        { message: "Faltan campos obligatorios" },
+        { message: "Errores de validación", errors: err.errors },
         { status: 400 }
       );
     }
+    const { name, price, quantity, reference, imageUrl, description } = data;
 
-    const existingProduct = await Product.findOne({ reference }); //check for existing product with same reference
+    // 2. Verificar referencia única
+    const existingProduct = await Product.findOne({ reference });
     if (existingProduct) {
       return NextResponse.json(
         { message: "Ya existe un producto con esa referencia" },
@@ -46,6 +52,34 @@ export async function POST(request: Request) {
       );
     }
 
+    if (!userEmail) {
+      return NextResponse.json(
+        { message: "No se pudo obtener el email del usuario" },
+        { status: 500 }
+      );
+    }
+
+    // 3. Intentar enviar correo antes de guardar
+    try {
+      await sendEmail({
+        to: userEmail || process.env.EMAIL_USER,
+        subject: "Nuevo producto agregado",
+        html: `
+          <h1>Nuevo producto agregado</h1>
+          <p>Se agregó un nuevo producto:</p>
+          <p><strong>${name}</strong></p>
+          <img src="${imageUrl}" width="200" />
+        `,
+      });
+    } catch (error) {
+      console.error("Error enviando correo:", error);
+      return NextResponse.json(
+        { message: "No se pudo enviar el correo" },
+        { status: 500 }
+      );
+    }
+
+    // Si el correo SÍ se envió → guardar producto
     const newProduct = new Product({
       name,
       price,
@@ -55,30 +89,7 @@ export async function POST(request: Request) {
       description,
     });
 
-    if (!newProduct) {
-      return NextResponse.json(
-        { message: "Error creating product" },
-        { status: 500 }
-      );
-    } else if (!userEmail) {
-      return NextResponse.json(
-        { message: "No se pudo obtener el email del usuario" },
-        { status: 500 }
-      );
-    }
-
     await newProduct.save();
-
-    await sendEmail({
-      to: userEmail || process.env.EMAIL_USER,
-      subject: "Nuevo producto agregado",
-      html: `
-    <h1>Nuevo producto agregado</h1>
-    <p>Se agregó un nuevo producto:</p>
-    <p><strong>${name}</strong></p>
-    <img src="${imageUrl}" width="200" />
-  `,
-    });
 
     return NextResponse.json(newProduct, { status: 201 });
   } catch (error) {
