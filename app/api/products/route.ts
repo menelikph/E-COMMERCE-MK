@@ -1,9 +1,9 @@
 import { connectDB } from "@/lib/mongodb";
 import Product from "@/models/Product";
 import { NextResponse } from "next/server";
-import { Resend } from "resend";
 import { getServerSession } from "next-auth";
 import { authOptions } from "../auth/[...nextauth]/route";
+import { sendEmail } from "@/lib/nodemailer";
 
 //list all products
 export async function GET() {
@@ -23,7 +23,6 @@ export async function GET() {
 //POST a new product into the database
 export async function POST(request: Request) {
   try {
-
     await connectDB();
 
     const session = await getServerSession(authOptions);
@@ -56,25 +55,29 @@ export async function POST(request: Request) {
       description,
     });
 
-    await newProduct.save(); //save the new product to the database
+    if (!newProduct) {
+      return NextResponse.json(
+        { message: "Error creating product" },
+        { status: 500 }
+      );
+    } else if (!userEmail) {
+      return NextResponse.json(
+        { message: "No se pudo obtener el email del usuario" },
+        { status: 500 }
+      );
+    }
 
-    const resend = new Resend(process.env.RESEND_API_KEY!);
+    await newProduct.save();
 
-    await resend.emails.send({
-      from: "onboarding@resend.dev",
-      to: userEmail, 
-      subject: "Nuevo producto agregado ✔",
+    await sendEmail({
+      to: userEmail || process.env.EMAIL_USER,
+      subject: "Nuevo producto agregado",
       html: `
-        <h1>Nuevo producto agregado</h1>
-
-        <p><strong>Nombre:</strong> ${name}</p>
-        <p><strong>Precio:</strong> $${price}</p>
-        <p><strong>Referencia:</strong> ${reference}</p>
-
-        <img src="${imageUrl}" width="180" />
-
-        <p>Mensaje automático.</p>
-      `,
+    <h1>Nuevo producto agregado</h1>
+    <p>Se agregó un nuevo producto:</p>
+    <p><strong>${name}</strong></p>
+    <img src="${imageUrl}" width="200" />
+  `,
     });
 
     return NextResponse.json(newProduct, { status: 201 });

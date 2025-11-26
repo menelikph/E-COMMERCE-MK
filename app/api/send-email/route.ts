@@ -10,6 +10,7 @@ export async function POST(req: Request) {
 
     const { to, subject, message } = body;
 
+    console.log(to, subject, message);
     const sendTo = to || process.env.EMAIL_TO;
 
     const data = await resend.emails.send({

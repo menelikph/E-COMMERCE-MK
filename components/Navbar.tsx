@@ -92,22 +92,6 @@ export default function Navbar() {
               Products
             </Link>
           </li>
-          <li>
-            <Link
-              href="/about"
-              className="text-gray-300 hover:text-purple-400 transition"
-            >
-              About
-            </Link>
-          </li>
-          <li>
-            <Link
-              href="/contact"
-              className="text-gray-300 hover:text-purple-400 transition"
-            >
-              Contact
-            </Link>
-          </li>
         </ul>
 
         <div className="hidden md:block">
