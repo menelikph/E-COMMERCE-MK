@@ -24,6 +24,7 @@
     "react-hot-toast": "^2.6.0",
     "react-toastify": "^11.0.5",
     "resend": "^6.5.2",
+    "tostify": "^0.0.1",
     "yup": "^1.7.1"
   },
   "devDependencies": {

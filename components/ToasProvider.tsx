@@ -6,8 +6,8 @@ import "react-toastify/dist/ReactToastify.css";
 export default function ToastProvider() {
   return (
     <ToastContainer
-      position="top-right"
-      autoClose={2500}
+      position="bottom-right"
+      autoClose={3500}
       hideProgressBar={false}
       newestOnTop={true}
       closeOnClick

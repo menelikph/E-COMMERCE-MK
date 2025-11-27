@@ -103,7 +103,7 @@ export default function NewProductPage() {
       notifySuccess("Product saved successfully!");
     } catch (error: any) {
       console.error(error);
-      alert(error.message || "Error saving product");
+      notifyError(error.message);
     }
   };
 
