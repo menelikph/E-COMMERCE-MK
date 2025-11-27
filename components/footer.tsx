@@ -1,11 +1,16 @@
 import Image from "next/image";
 import Link from "next/link";
+import { Github, Linkedin, Mail } from "lucide-react";
 
 export default function Footer() {
+
+  const GITHUB_URL = process.env.GITHUB_URL || "";
+  const LINKEDIN_URL = process.env.LINKEDIN_URL || "";
+  const EMAIL = process.env.EMAIL || "";
   return (
     <footer className="border-t border-border bg-secondary/30">
       <div className="max-w-6xl mx-auto px-4 py-12">
-        <div className="grid md:grid-cols-3 gap-8">
+        <div className="grid ml-20 md:grid-cols-3 gap-8">
           <div>
             <Image
               src="/menelik_logo.png"
@@ -14,10 +19,6 @@ export default function Footer() {
               height={40}
               className=""
             />
-            <p className="text-sm text-muted-foreground mt-10 leading-relaxed">
-              Frontend Developer specializing in building exceptional digital
-              experiences.
-            </p>
           </div>
 
           <div>
@@ -33,18 +34,10 @@ export default function Footer() {
               </li>
               <li>
                 <Link
-                  href="/projects"
+                  href="/products"
                   className="text-sm text-muted-foreground hover:text-purple-500 transition-colors"
                 >
                   Projects
-                </Link>
-              </li>
-              <li>
-                <Link
-                  href="/contact"
-                  className="text-sm text-muted-foreground hover:text-purple-500 transition-colors"
-                >
-                  Contact
                 </Link>
               </li>
             </ul>
@@ -79,7 +72,7 @@ export default function Footer() {
                 <Mail className="w-5 h-5" />
               </a>
             </div>
-            <LanguageSwitcher />
+            {/*<LanguageSwitcher /> */}
           </div>
         </div>
 

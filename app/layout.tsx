@@ -5,6 +5,7 @@ import Navbar from "../components/Navbar";
 import "./globals.css";
 import { HeroUIProvider } from "@heroui/react";
 import { SessionProvider } from "next-auth/react";
+import Footer from "@/components/footer";
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
@@ -17,6 +18,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
             <main className="max-w-7xl mx-auto p-6 mt-20">{children}</main>
           </HeroUIProvider>
         </SessionProvider>
+        <Footer></Footer>
       </body>
     </html>
   );
