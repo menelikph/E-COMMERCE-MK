@@ -7,12 +7,60 @@ import { authOptions } from "../auth/[...nextauth]/route";
 import { sendEmail } from "@/lib/nodemailer";
 import { productSchema } from "@/lib/validation/productSchema";
 
-// GET → List all products
-export async function GET() {
+// ================================
+// GET → List with pagination + filters
+// ================================
+export async function GET(request: Request) {
   try {
     await connectDB();
-    const products = await Product.find().sort({ createdAt: -1 });
-    return NextResponse.json(products, { status: 200 });
+
+    const { searchParams } = new URL(request.url);
+
+    const page = Number(searchParams.get("page")) || 1;
+    const limit = Number(searchParams.get("limit")) || 8;
+
+    const search = searchParams.get("search") || "";
+    const minPrice = searchParams.get("minPrice");
+    const maxPrice = searchParams.get("maxPrice");
+
+    const query: any = {};
+
+    // search filter → name
+    if (search) {
+      query.name = { $regex: search, $options: "i" };
+    }
+
+    // Price filters → minPrice
+    if (minPrice) {
+      query.price = { ...query.price, $gte: Number(minPrice) };
+    }
+
+    // Price filters → maxPrice
+    if (maxPrice) {
+      query.price = { ...query.price, $lte: Number(maxPrice) };
+    }
+
+    const skip = (page - 1) * limit;
+
+    const [products, total] = await Promise.all([
+      Product.find(query).sort({ createdAt: -1 }).skip(skip).limit(limit),
+      Product.countDocuments(query),
+    ]);
+
+    const totalPages = Math.ceil(total / limit);
+
+    return NextResponse.json(
+      {
+        products,
+        pagination: {
+          page,
+          limit,
+          total,
+          totalPages,
+        },
+      },
+      { status: 200 }
+    );
   } catch (error) {
     console.error("Error fetching products:", error);
     return NextResponse.json(
@@ -22,7 +70,9 @@ export async function GET() {
   }
 }
 
+// ================================
 // POST → Create new product
+// ================================
 export async function POST(request: Request) {
   try {
     await connectDB();
@@ -32,7 +82,7 @@ export async function POST(request: Request) {
 
     const data = await request.json();
 
-    // Validación con Yup
+    // Yup validation
     try {
       await productSchema.validate(data, { abortEarly: false });
     } catch (err: any) {
@@ -41,9 +91,10 @@ export async function POST(request: Request) {
         { status: 400 }
       );
     }
+
     const { name, price, quantity, reference, imageUrl, description } = data;
 
-    // 2. Verificar referencia única
+    // Unique reference
     const existingProduct = await Product.findOne({ reference });
     if (existingProduct) {
       return NextResponse.json(
@@ -59,7 +110,7 @@ export async function POST(request: Request) {
       );
     }
 
-    // 3. Intentar enviar correo antes de guardar
+    // Try to send email first
     try {
       await sendEmail({
         to: userEmail || process.env.EMAIL_USER,
@@ -79,7 +130,7 @@ export async function POST(request: Request) {
       );
     }
 
-    // Si el correo SÍ se envió → guardar producto
+    // Save only if email succeeded
     const newProduct = new Product({
       name,
       price,
