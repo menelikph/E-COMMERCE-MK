@@ -1,4 +1,3 @@
-import ProductsPage from "./products/page";
 
 export default function Home() {
 
@@ -8,8 +7,6 @@ export default function Home() {
         home
         <p className="text-9xl">Lorem ipsum dolor, sit amet consectetur adipisicing elit. Expedita quia nostrum rerum nihil mollitia iste ex ipsa, porro molestiae ad eum harum unde aspernatur nemo qui veniam culpa maiores enim!</p>
       </h1>
-
-      <ProductsPage/> 
     </div>
   );
 }

@@ -1,12 +1,9 @@
 import Image from "next/image";
 import Link from "next/link";
 import { Github, Linkedin, Mail } from "lucide-react";
+import { EMAIL, GITHUB_URL, LINKEDIN_URL } from "@/utils/constants";
 
 export default function Footer() {
-
-  const GITHUB_URL = process.env.GITHUB_URL || "";
-  const LINKEDIN_URL = process.env.LINKEDIN_URL || "";
-  const EMAIL = process.env.EMAIL || "";
   return (
     <footer className="border-t border-border bg-secondary/30">
       <div className="max-w-6xl mx-auto px-4 py-12">

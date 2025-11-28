@@ -2,7 +2,8 @@
 import { motion, AnimatePresence } from "framer-motion";
 import { useEffect, useState } from "react";
 import Link from "next/link";
-import AuthButton from "./AuthButton";
+import AuthButton from "../ui/AuthButton";
+
 
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);

@@ -22,13 +22,11 @@ export default function TestForm() {
       <h2 className="text-xl mb-4">Escribe tu nombre</h2>
 
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
-
         <input
           type="text"
           {...register("name", { required: "El nombre es obligatorio" })}
           className="w-full px-4 py-2 rounded bg-gray-900 border border-gray-700 text-white"
         />
-
 
         {errors.name && (
           <p className="text-red-400 text-sm">
