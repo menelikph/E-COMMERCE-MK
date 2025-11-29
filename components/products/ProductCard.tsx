@@ -1,14 +1,27 @@
 "use client";
+
+import { useCart } from "@/app/context/CartContext";
 import { motion } from "framer-motion";
 
+
 interface ProductCardProps {
+  _id: string;       // 👈 agregado para agregar al carrito
   name: string;
   price: number;
   imageUrl: string;
   index?: number;
 }
 
-export default function ProductCard({ name, price, imageUrl, index = 0 }: ProductCardProps) {
+export default function ProductCard({
+  _id,
+  name,
+  price,
+  imageUrl,
+  index = 0,
+}: ProductCardProps) {
+  
+  const { addToCart } = useCart(); 
+
   return (
     <motion.article
       initial={{ opacity: 0, y: 30 }}
@@ -38,7 +51,10 @@ export default function ProductCard({ name, price, imageUrl, index = 0 }: Produc
         ${price.toFixed(2)}
       </span>
 
-      <button className="border border-purple-400 text-purple-400 hover:bg-purple-600 hover:text-white transition-all duration-300 rounded-full px-4 py-1 text-sm">
+      <button
+        onClick={() => addToCart({ _id, name, price, imageUrl })}
+        className="border border-purple-400 text-purple-400 hover:bg-purple-600 hover:text-white transition-all duration-300 rounded-full px-4 py-1 text-sm"
+      >
         Add to cart
       </button>
     </motion.article>

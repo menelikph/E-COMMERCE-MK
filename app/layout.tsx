@@ -1,14 +1,7 @@
-"use client";
-
-import ToastProvider from "@/components/feedback/ToasProvider";
-import { HeroUIProvider } from "@heroui/react";
-import { SessionProvider } from "next-auth/react";
 import "./globals.css";
 import Footer from "@/components/layout/footer";
 import Navbar from "@/components/layout/Navbar";
-
-// ⬅ IMPORTA EL PROVIDER
-import { CartProvider } from "@/app/context/CartContext";
+import Providers from "@/app/providers/Providers";
 
 export default function RootLayout({
   children,
@@ -18,26 +11,20 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className="bg-gray-950 text-gray-100">
-        <SessionProvider>
-          <HeroUIProvider>
 
-            <CartProvider>
-              <ToastProvider />
+        <Providers>
+          {/* NAV */}
+          <Navbar />
 
-              {/* NAV */}
-              <Navbar />
+          {/* CONTENT */}
+          <main className="max-w-7xl mx-auto p-6 mt-20">
+            {children}
+          </main>
 
-              {/* CONTENT */}
-              <main className="max-w-7xl mx-auto p-6 mt-20">
-                {children}
-              </main>
+          {/* FOOTER */}
+          <Footer />
+        </Providers>
 
-              {/* FOOTER */}
-              <Footer />
-            </CartProvider>
-
-          </HeroUIProvider>
-        </SessionProvider>
       </body>
     </html>
   );

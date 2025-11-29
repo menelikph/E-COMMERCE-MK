@@ -4,10 +4,14 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import AuthButton from "../ui/AuthButton";
 
+import { ShoppingCart } from "lucide-react";
+import { useCart } from "@/app/context/CartContext";
 
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
+  const { cart } = useCart();
+
   const toggleMenu = () => setIsOpen(!isOpen);
 
   useEffect(() => {
@@ -95,14 +99,27 @@ export default function Navbar() {
           </li>
         </ul>
 
-        <div className="hidden md:block">
-          <li className="flex justify-center ">
-            <AuthButton/>
-          </li>
+        <div className="hidden md:flex items-center gap-6">
+          {/* CARRITO */}
+          <Link href="/cart" className="relative group">
+            <ShoppingCart className="w-6 h-6 text-gray-300 group-hover:text-purple-400 transition" />
+
+            {cart.length > 0 && (
+              <span className="absolute -top-2 -right-2 bg-purple-600 text-white text-xs font-bold rounded-full w-5 h-5 flex items-center justify-center">
+                {cart.length}
+              </span>
+            )}
+          </Link>
+
+          {/* LOGIN / LOGOUT */}
+          <AuthButton />
         </div>
       </nav>
+      
 
       <AnimatePresence>
+        
+        
         {isOpen && (
           <motion.div
             key="overlay"
@@ -113,6 +130,8 @@ export default function Navbar() {
             className="fixed inset-0 bg-black/50 backdrop-blur-sm z-40"
             onClick={() => setIsOpen(false)}
           >
+            
+            
             <motion.div
               key="menu"
               initial={{ opacity: 0, y: -20 }}
@@ -122,6 +141,7 @@ export default function Navbar() {
               className="absolute top-0 left-0 w-full border-gray-700 z-50"
               onClick={(e) => e.stopPropagation()}
             >
+              
               <ul className="flex flex-col mt-5 text-center py-4 space-y-2 text-gray-300 uppercase text-sm">
                 <li>
                   <Link
@@ -164,6 +184,7 @@ export default function Navbar() {
                 </li>
               </ul>
             </motion.div>
+            
           </motion.div>
         )}
       </AnimatePresence>
