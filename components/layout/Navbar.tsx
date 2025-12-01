@@ -32,13 +32,13 @@ export default function Navbar() {
 
   return (
     <header
-      className={`fixed top-0 left-0 w-full z-50 transition-all duration-500 ${
+      className={`bg fixed top-0 left-0 w-full z-50 transition-all duration-500 ${
         scrolled
-          ? " shadow-md bg-transparent border-gray-800 backdrop-blur-md"
-          : "bg-transparent border-b border-gray-700"
+          ? " shadow-md border-gray-800 backdrop-blur-md"
+          : " border-b border-gray-700"
       }`}
     >
-      <nav className="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center transition-all duration-300">
+      <nav className="max-w-7xl mx-auto px-5 py-4 flex justify-between items-center transition-all duration-300">
         <Link
           href="/"
           className={`text-2xl font-extrabold tracking-wide hover:scale-[1.15] transition-transform duration-300 ${
@@ -159,24 +159,6 @@ export default function Navbar() {
                     className="block hover:text-purple-400 transition"
                   >
                     Products
-                  </Link>
-                </li>
-                <li>
-                  <Link
-                    href="/about"
-                    onClick={() => setIsOpen(false)}
-                    className="block hover:text-purple-400 transition"
-                  >
-                    About
-                  </Link>
-                </li>
-                <li>
-                  <Link
-                    href="/contact"
-                    onClick={() => setIsOpen(false)}
-                    className="block hover:text-purple-400 transition"
-                  >
-                    Contact
                   </Link>
                 </li>
                 <li className="w-full flex justify-center mt-4 ">

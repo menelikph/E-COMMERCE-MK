@@ -1,11 +1,16 @@
+
 import Image from "next/image";
 import Link from "next/link";
 import { Github, Linkedin, Mail } from "lucide-react";
 import { EMAIL, GITHUB_URL, LINKEDIN_URL } from "@/utils/constants";
+import LanguageSwitcher from "../ui/LanguageSwitcher";
+
+
+
 
 export default function Footer() {
   return (
-    <footer className="border-t border-border bg-secondary/30">
+    <footer className="border-t border-border p-6 mt-12">
       <div className="max-w-6xl mx-auto px-4 py-12">
         <div className="grid ml-20 md:grid-cols-3 gap-8">
           <div>
@@ -69,7 +74,7 @@ export default function Footer() {
                 <Mail className="w-5 h-5" />
               </a>
             </div>
-            {/*<LanguageSwitcher /> */}
+            <LanguageSwitcher/> 
           </div>
         </div>
 

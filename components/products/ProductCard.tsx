@@ -5,7 +5,7 @@ import { motion } from "framer-motion";
 
 
 interface ProductCardProps {
-  _id: string;       // 👈 agregado para agregar al carrito
+  _id: string;       
   name: string;
   price: number;
   imageUrl: string;
