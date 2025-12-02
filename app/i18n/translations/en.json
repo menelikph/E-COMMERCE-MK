@@ -1,5 +1,89 @@
 {
-  "products": "Products",
-  "add_product": "Add product",
-  "no_products": "No products found"
+  "common": {
+    "loading": "Loading..."
+  },
+
+  
+  "products": {
+    "title": "Product Catalog",
+    "add_new": "Add Product",
+    "add_new_title": "Add New Product",
+    "search_placeholder": "Search by name...",
+    "min_price_placeholder": "Min price",
+    "max_price_placeholder": "Max price",
+    "apply_filters": "Apply Filters",
+    "not_found": "No products found.",
+    "loading": "Loading products..."
+  },
+  "cart": {
+    "title": "Your Shopping Cart",
+    "empty_message": "Your cart is empty.",
+    "remove": "Remove",
+    "clear": "Clear Cart",
+    "checkout": "Checkout" 
+  },
+  "pagination": {
+    "prev": "← Prev",
+    "next": "Next →",
+    "page_info": "Page ",
+    "page_label": "Page",
+    "separator": "of"
+  },
+  "form": {
+    "label_name": "Product Name",
+    "label_price": "Price",
+    "label_description": "Description",
+    "label_quantity": "Quantity",
+    "label_reference": "Reference",
+    "label_image": "Image",
+    "image_preview_alt": "Product Image Preview",
+    "save_button_text": "Save Product",
+    "saving_button_text": "Saving...",
+
+    "name_required": "Name is required",
+    "name_min": "Minimum 3 characters",
+    "name_max": "Maximum 100 characters",
+    
+    "price_required": "Price is required",
+    "price_type_error": "Price must be a number",
+    "price_positive": "Price must be positive",
+
+    "description_required": "Description is required",
+    "description_min": "Minimum 10 characters",
+    "description_max": "Maximum 500 characters",
+
+    "quantity_required": "Quantity is required",
+    "quantity_type_error": "Quantity must be a number",
+    "quantity_integer": "Quantity must be an integer",
+    "quantity_min": "Quantity cannot be negative",
+
+    "reference_required": "Reference is required",
+    "reference_invalid_chars": "Only letters, numbers and hyphens allowed",
+
+    "image_required": "Image is required",
+    "image_size_error": "Image is too large (max 2MB)",
+    "image_format_error": "Unsupported image format"
+  },
+  "auth": {
+    "restricted_access_title": "Restricted Access",
+    "restricted_access_message": "You must log in to add a product.",
+    "login_button": "Login"
+  },
+  "toast": {
+    "product_saved": "Product saved successfully!",
+    "no_image_selected": "No image selected",
+    "generic_error": "An unknown error occurred"
+  },
+  "home": {
+    "welcome_title": "Welcome to MStore",
+    "products_button": "Products"
+  },
+  "features": {
+    "shipping_title": "Fast Shipping",
+    "shipping_description": "Receive your order in record time.",
+    "security_title": "Secure Payments",
+    "security_description": "Pay safely with trusted gateways.",
+    "quality_title": "Premium Quality",
+    "quality_description": "Only top-quality curated items."
+  }
 }

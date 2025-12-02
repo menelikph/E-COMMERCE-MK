@@ -13,7 +13,9 @@ export const authOptions = {
     }),
   ],
   secret: process.env.NEXTAUTH_SECRET,
+
   callbacks: {
+    // Add user ID to the session object
     async session({ session, user }: { session: any; user: any }) {
       if (session.user) {
         (session.user as any).id = user.id;
@@ -24,4 +26,6 @@ export const authOptions = {
 };
 
 const handler = NextAuth(authOptions);
+
+// Export API route handlers
 export { handler as GET, handler as POST };

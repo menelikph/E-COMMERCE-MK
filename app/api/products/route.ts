@@ -9,7 +9,7 @@ import { productSchema } from "@/lib/validation/productSchema";
 
 
 // ================================
-// GET → List with pagination + filters
+// GET → List products with pagination + filters
 // ================================
 export async function GET(request: Request) {
   try {
@@ -26,7 +26,7 @@ export async function GET(request: Request) {
 
     const query: any = {};
 
-    // search filter → name
+    // Search filter → by name
     if (search) {
       query.name = { $regex: search, $options: "i" };
     }
@@ -72,7 +72,7 @@ export async function GET(request: Request) {
 }
 
 // ================================
-// POST → Create new product
+// POST → Create a new product
 // ================================
 export async function POST(request: Request) {
   try {
@@ -88,25 +88,25 @@ export async function POST(request: Request) {
       await productSchema.validate(data, { abortEarly: false });
     } catch (err: any) {
       return NextResponse.json(
-        { message: "Errores de validación", errors: err.errors },
+        { message: "Validation errors", errors: err.errors },
         { status: 400 }
       );
     }
 
     const { name, price, quantity, reference, imageUrl, description } = data;
 
-    // Unique reference
+    // Unique reference check
     const existingProduct = await Product.findOne({ reference });
     if (existingProduct) {
       return NextResponse.json(
-        { message: "Ya existe un producto con esa referencia" },
+        { message: "A product with this reference already exists" },
         { status: 400 }
       );
     }
 
     if (!userEmail) {
       return NextResponse.json(
-        { message: "No se pudo obtener el email del usuario" },
+        { message: "User email could not be retrieved" },
         { status: 500 }
       );
     }
@@ -115,18 +115,18 @@ export async function POST(request: Request) {
     try {
       await sendEmail({
         to: userEmail || process.env.EMAIL_USER,
-        subject: "Nuevo producto agregado",
+        subject: "New product added",
         html: `
-          <h1>Nuevo producto agregado</h1>
-          <p>Se agregó un nuevo producto:</p>
+          <h1>New product added</h1>
+          <p>A new product has been added:</p>
           <p><strong>${name}</strong></p>
           <img src="${imageUrl}" width="200" />
         `,
       });
     } catch (error) {
-      console.error("Error enviando correo:", error);
+      console.error("Error sending email:", error);
       return NextResponse.json(
-        { message: "No se pudo enviar el correo" },
+        { message: "Error sending email" },
         { status: 500 }
       );
     }

@@ -3,27 +3,40 @@
 "use client";
 
 import { useEffect, useState } from "react";
+// Assuming ProductCard is imported correctly relative to this component
 import ProductCard from "../../components/products/ProductCard";
 import Link from "next/link";
+import { useI18n } from "../context/I18nContext";
+// Import our custom i18n hook
 
+/**
+ * ProductsPage component displays a list of products with filtering, search, and pagination capabilities.
+ */
 export default function ProductsPage() {
+  // Access the translation function 't'.
+  const { t } = useI18n();
+
   const [products, setProducts] = useState<any[]>([]);
   const [pagination, setPagination] = useState<any>(null);
   const [loading, setLoading] = useState(true);
 
-  // Filtros y paginación
+  // State for filtering and pagination controls
   const [page, setPage] = useState(1);
   const [search, setSearch] = useState("");
   const [minPrice, setMinPrice] = useState("");
   const [maxPrice, setMaxPrice] = useState("");
 
+  /**
+   * Fetches product data from the API endpoint, applying current filters and pagination.
+   */
   async function fetchProducts() {
     setLoading(true);
 
     try {
+      // Build query parameters from current state values (page, search, prices).
       const params = new URLSearchParams({
         page: page.toString(),
-        limit: "8",
+        limit: "8", // Fixed limit per page
       });
 
       if (search) params.append("search", search);
@@ -42,43 +55,53 @@ export default function ProductsPage() {
     }
   }
 
+  // Effect to refetch products whenever the page number changes.
   useEffect(() => {
     fetchProducts();
   }, [page]);
 
-  // Para filtros y búsqueda → reiniciamos la página en 1
+  /**
+   * Applies filters by resetting the page number to 1 and fetching data.
+   */
   const applyFilters = () => {
     setPage(1);
-    fetchProducts();
+    // Note: fetchProducts will run again due to the useEffect dependency on [page]
+    // if setPage(1) actually changes the page state.
+    // If page is already 1, we manually call fetchProducts:
+    if (page === 1) {
+      fetchProducts();
+    }
   };
 
+  // Display a loading message while data is being fetched.
   if (loading) {
     return (
       <div className="min-h-screen flex justify-center items-center text-purple-400 text-xl">
-        Loading products...
+        {t("products.loading")}
       </div>
     );
   }
 
   return (
     <div className="max-w-7xl mx-auto px-6 py-20">
-      {/* Header con botón */}
+      {/* Header section with title and Add Product button */}
       <div className="flex justify-between items-center mb-8">
-        <h1 className="text-3xl font-bold">Products</h1>
+        <h1 className="text-3xl font-bold">{t("products.title")}</h1>
 
         <Link
           href="/products/new"
           className="px-4 py-2 bg-purple-600 hover:bg-purple-700 text-white rounded-lg shadow transition"
         >
-          Add Product
+          {t("products.add_new")}
         </Link>
       </div>
 
-      {/* 🔍 Filtros */}
+      {/* Filtering and Search Controls */}
       <div className="flex flex-wrap gap-4 mb-6 bg-gray-900 p-4 rounded-lg border border-gray-700">
         <input
           type="text"
-          placeholder="Search by name..."
+          // Translated placeholder for search input
+          placeholder={t("products.search_placeholder")}
           value={search}
           onChange={(e) => setSearch(e.target.value)}
           className="px-3 py-2 bg-gray-800 border border-gray-700 rounded text-white"
@@ -86,7 +109,8 @@ export default function ProductsPage() {
 
         <input
           type="number"
-          placeholder="Min price"
+          // Translated placeholder for minimum price
+          placeholder={t("products.min_price_placeholder")}
           value={minPrice}
           onChange={(e) => setMinPrice(e.target.value)}
           className="px-3 py-2 bg-gray-800 border border-gray-700 rounded text-white w-28"
@@ -94,7 +118,8 @@ export default function ProductsPage() {
 
         <input
           type="number"
-          placeholder="Max price"
+          // Translated placeholder for maximum price
+          placeholder={t("products.max_price_placeholder")}
           value={maxPrice}
           onChange={(e) => setMaxPrice(e.target.value)}
           className="px-3 py-2 bg-gray-800 border border-gray-700 rounded text-white w-28"
@@ -104,16 +129,18 @@ export default function ProductsPage() {
           onClick={applyFilters}
           className="px-4 py-2 bg-purple-600 hover:bg-purple-700 text-white rounded-lg"
         >
-          Apply Filters
+          {t("products.apply_filters")}
         </button>
       </div>
 
-      {/* LISTA DE PRODUCTOS */}
+      {/* Product List Display */}
       {products.length === 0 ? (
-        <p className="text-gray-400 text-center">No products found.</p>
+        // Translated message when no products are found
+        <p className="text-gray-400 text-center">{t("products.not_found")}</p>
       ) : (
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
           {products.map((product) => (
+            // ProductCard component displays individual product details
             <ProductCard
               key={product._id}
               _id={product._id}
@@ -125,7 +152,7 @@ export default function ProductsPage() {
         </div>
       )}
 
-      {/* PAGINACIÓN */}
+      {/* Pagination Controls */}
       {pagination && (
         <div className="flex justify-center items-center mt-10 gap-4">
           <button
@@ -133,11 +160,12 @@ export default function ProductsPage() {
             onClick={() => setPage(page - 1)}
             className="px-4 py-2 bg-gray-800 text-white rounded disabled:opacity-40"
           >
-            ← Prev
+            {t("pagination.prev")}
           </button>
 
           <span className="text-white">
-            Page {pagination.page} of {pagination.totalPages}
+            {t("pagination.page_info")} {pagination.page} /{" "}
+            {pagination.totalPages}
           </span>
 
           <button
@@ -145,7 +173,7 @@ export default function ProductsPage() {
             onClick={() => setPage(page + 1)}
             className="px-4 py-2 bg-gray-800 text-white rounded disabled:opacity-40"
           >
-            Next →
+            {t("pagination.next")}
           </button>
         </div>
       )}

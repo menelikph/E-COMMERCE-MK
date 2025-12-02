@@ -1,5 +1,87 @@
 {
-  "products": "Productos",
-  "add_product": "Agregar producto",
-  "no_products": "No hay productos"
+  "common": {
+    "loading": "Cargando..."
+  },
+  "products": {
+    "title": "Catálogo de Productos",
+    "add_new": "Añadir Producto",
+    "add_new_title": "Añadir Nuevo Producto",
+    "search_placeholder": "Buscar por nombre...",
+    "min_price_placeholder": "Precio mín.",
+    "max_price_placeholder": "Precio máx.",
+    "apply_filters": "Aplicar Filtros",
+    "not_found": "No se encontraron productos.",
+    "loading": "Cargando productos..."
+  },
+  "cart": {
+    "title": "Tu Carrito de Compras",
+    "empty_message": "Tu carrito está vacío.",
+    "remove": "Eliminar",
+    "clear": "Vaciar Carrito",
+    "checkout": "Pagar"
+  },
+  "pagination": {
+    "prev": "← Anterior",
+    "next": "Siguiente →",
+    "page_info": "Página ",
+    "page_label": "Página",
+    "separator": "de"
+  },
+  "form": {
+    "label_name": "Nombre del Producto",
+    "label_price": "Precio",
+    "label_description": "Descripción",
+    "label_quantity": "Cantidad",
+    "label_reference": "Referencia",
+    "label_image": "Imagen",
+    "image_preview_alt": "Previsualización de la Imagen del Producto",
+    "save_button_text": "Guardar Producto",
+    "saving_button_text": "Guardando...",
+
+    "name_required": "El nombre es obligatorio",
+    "name_min": "Mínimo 3 caracteres",
+    "name_max": "Máximo 100 caracteres",
+    
+    "price_required": "El precio es obligatorio",
+    "price_type_error": "El precio debe ser un número",
+    "price_positive": "El precio debe ser positivo",
+
+    "description_required": "La descripción es obligatoria",
+    "description_min": "Mínimo 10 caracteres",
+    "description_max": "Máximo 500 caracteres",
+
+    "quantity_required": "La cantidad es obligatoria",
+    "quantity_type_error": "La cantidad debe ser un número",
+    "quantity_integer": "La cantidad debe ser un número entero",
+    "quantity_min": "La cantidad no puede ser negativa",
+
+    "reference_required": "La referencia es obligatoria",
+    "reference_invalid_chars": "Solo se permiten letras, números y guiones",
+
+    "image_required": "La imagen es obligatoria",
+    "image_size_error": "La imagen es demasiado grande (máx 2MB)",
+    "image_format_error": "Formato de imagen no compatible"
+  },
+  "auth": {
+    "restricted_access_title": "Acceso Restringido",
+    "restricted_access_message": "Debes iniciar sesión para agregar un producto.",
+    "login_button": "Iniciar Sesión"
+  },
+  "toast": {
+    "product_saved": "¡Producto guardado exitosamente!",
+    "no_image_selected": "No se seleccionó ninguna imagen",
+    "generic_error": "Ocurrió un error desconocido"
+  },
+  "home": {
+    "welcome_title": "Bienvenido a MStore",
+    "products_button": "Productos"
+  },
+  "features": {
+    "shipping_title": "Envío Rápido",
+    "shipping_description": "Recibe tu pedido en tiempo récord.",
+    "security_title": "Pagos Seguros",
+    "security_description": "Paga de forma segura con pasarelas de confianza.",
+    "quality_title": "Calidad Premium",
+    "quality_description": "Solo artículos seleccionados de alta calidad."
+  }
 }
